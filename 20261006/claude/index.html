@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fieldline — Forward Deployed Engineering Service</title>
+<meta name="description" content="Fieldline embeds senior engineers inside your organization to deploy software, integrate systems, and solve operational problems on site.">
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg-alt: #f5f7fa;
+    --ink: #0f1a2b;
+    --ink-soft: #46546a;
+    --line: #e2e7ee;
+    --brand: #0b5fff;
+    --brand-dark: #0847c2;
+    --accent: #12b886;
+    --dark: #0b1424;
+    --radius: 14px;
+    --shadow: 0 10px 30px rgba(15, 26, 43, .08);
+    --max: 1160px;
+  }
+  *, *::before, *::after { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+  img, svg { max-width: 100%; display: block; }
+  a { color: inherit; text-decoration: none; }
+  h1, h2, h3 { line-height: 1.15; margin: 0 0 .6em; letter-spacing: -.02em; }
+  h1 { font-size: clamp(2.3rem, 5.5vw, 3.8rem); }
+  h2 { font-size: clamp(1.7rem, 3.6vw, 2.5rem); }
+  h3 { font-size: 1.15rem; letter-spacing: -.01em; }
+  p { margin: 0 0 1em; }
+  .wrap { width: 100%; max-width: var(--max); margin: 0 auto; padding: 0 24px; }
+  section { padding: 88px 0; }
+  .alt { background: var(--bg-alt); }
+  .eyebrow {
+    display: inline-block; font-size: .8rem; font-weight: 700; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--brand); margin-bottom: 14px;
+  }
+  .section-head { max-width: 680px; margin-bottom: 48px; }
+  .section-head p { color: var(--ink-soft); font-size: 1.08rem; }
+  .center { text-align: center; margin-left: auto; margin-right: auto; }
+
+  .btn {
+    display: inline-block; padding: 14px 26px; border-radius: 10px; font-weight: 600;
+    border: 1.5px solid transparent; transition: background .2s, transform .2s, border-color .2s, color .2s;
+    cursor: pointer; font-size: 1rem; font-family: inherit;
+  }
+  .btn-primary { background: var(--brand); color: #fff; }
+  .btn-primary:hover { background: var(--brand-dark); transform: translateY(-1px); }
+  .btn-ghost { border-color: var(--line); background: #fff; color: var(--ink); }
+  .btn-ghost:hover { border-color: var(--ink); }
+  a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible, label:focus-visible {
+    outline: 3px solid #7aa7ff; outline-offset: 2px;
+  }
+
+  /* Header */
+  header {
+    position: sticky; top: 0; z-index: 50; background: rgba(255,255,255,.92);
+    backdrop-filter: blur(10px); border-bottom: 1px solid var(--line);
+  }
+  .nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 800; font-size: 1.3rem; letter-spacing: -.03em; }
+  .logo-mark {
+    width: 32px; height: 32px; border-radius: 9px; background: var(--brand); display: grid; place-items: center;
+  }
+  .nav-links { display: flex; align-items: center; gap: 30px; list-style: none; margin: 0; padding: 0; }
+  .nav-links a { font-weight: 500; color: var(--ink-soft); }
+  .nav-links a:hover { color: var(--ink); }
+  .nav-links .btn { color: #fff; padding: 10px 20px; }
+  .nav-links .btn:hover { color: #fff; }
+  #menu-toggle { position: absolute; opacity: 0; pointer-events: none; }
+  .menu-btn { display: none; width: 44px; height: 44px; cursor: pointer; border-radius: 8px; align-items: center; justify-content: center; }
+  .menu-btn span, .menu-btn span::before, .menu-btn span::after {
+    display: block; width: 22px; height: 2px; background: var(--ink); border-radius: 2px; position: relative; transition: transform .2s, background .2s;
+  }
+  .menu-btn span::before, .menu-btn span::after { content: ""; position: absolute; left: 0; }
+  .menu-btn span::before { top: -7px; }
+  .menu-btn span::after { top: 7px; }
+
+  /* Hero */
+  .hero {
+    padding: 80px 0 96px;
+    background:
+      radial-gradient(900px 400px at 85% -10%, rgba(11,95,255,.12), transparent 60%),
+      radial-gradient(600px 300px at 0% 100%, rgba(18,184,134,.10), transparent 60%),
+      var(--bg);
+  }
+  .hero-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: 56px; align-items: center; }
+  .hero p.lead { font-size: 1.2rem; color: var(--ink-soft); max-width: 560px; }
+  .hero-cta { display: flex; flex-wrap: wrap; gap: 14px; margin-top: 28px; }
+  .hero-note { margin-top: 22px; font-size: .92rem; color: var(--ink-soft); display: flex; gap: 8px; align-items: center; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 4px rgba(18,184,134,.2); }
+
+  .console {
+    background: var(--dark); border-radius: 16px; box-shadow: 0 30px 60px rgba(11,20,36,.28); overflow: hidden; color: #cfd8e6;
+  }
+  .console-bar { display: flex; gap: 7px; padding: 14px 16px; background: #111d33; align-items: center; }
+  .console-bar i { width: 11px; height: 11px; border-radius: 50%; background: #2c3b57; display: block; }
+  .console-bar small { margin-left: 10px; color: #7f90ad; font-size: .78rem; }
+  .console-body { padding: 22px; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .86rem; line-height: 1.9; }
+  .console-body .ok { color: #3ddc9d; }
+  .console-body .mut { color: #6f819f; }
+  .console-body .hl { color: #7aa7ff; }
+
+  /* Logos / trust strip */
+  .strip { padding: 34px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--bg-alt); }
+  .strip ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 14px 40px; justify-content: center; color: var(--ink-soft); font-weight: 600; }
+  .strip li::before { content: "✓"; color: var(--accent); margin-right: 8px; font-weight: 800; }
+
+  /* Cards */
+  .grid { display: grid; gap: 24px; }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .g2 { grid-template-columns: repeat(2, 1fr); }
+  .card {
+    background: #fff; border: 1px solid var(--line); border-radius: var(--radius); padding: 30px;
+    transition: box-shadow .2s, transform .2s;
+  }
+  .card:hover { box-shadow: var(--shadow); transform: translateY(-3px); }
+  .card p { color: var(--ink-soft); margin: 0; }
+  .icon {
+    width: 48px; height: 48px; border-radius: 12px; background: rgba(11,95,255,.1); color: var(--brand);
+    display: grid; place-items: center; margin-bottom: 18px;
+  }
+  .icon svg { width: 24px; height: 24px; }
+
+  /* Compare */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .compare .card ul { list-style: none; padding: 0; margin: 14px 0 0; }
+  .compare li { padding: 9px 0 9px 28px; position: relative; color: var(--ink-soft); border-top: 1px solid var(--line); }
+  .compare li:first-child { border-top: 0; }
+  .compare .no li::before { content: "×"; position: absolute; left: 0; color: #d6455d; font-weight: 800; }
+  .compare .yes li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 800; }
+  .compare .yes { border-color: var(--brand); box-shadow: var(--shadow); }
+  .compare .card:hover { transform: none; }
+
+  /* Process */
+  .steps { counter-reset: step; display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .step { position: relative; padding-top: 22px; border-top: 3px solid var(--line); }
+  .step::before {
+    counter-increment: step; content: "0" counter(step); display: block; font-weight: 800; color: var(--brand); margin-bottom: 8px; font-size: .95rem;
+  }
+  .step { border-top-color: var(--brand); }
+  .step p { color: var(--ink-soft); margin: 0; }
+
+  /* Engagement */
+  .tier { display: flex; flex-direction: column; }
+  .tier.featured { border-color: var(--brand); box-shadow: var(--shadow); position: relative; }
+  .badge {
+    position: absolute; top: -13px; left: 30px; background: var(--brand); color: #fff; font-size: .75rem; font-weight: 700;
+    padding: 4px 12px; border-radius: 99px; letter-spacing: .04em;
+  }
+  .tier ul { list-style: none; padding: 0; margin: 18px 0 24px; flex: 1; }
+  .tier li { padding: 6px 0 6px 26px; position: relative; color: var(--ink-soft); }
+  .tier li::before { content: "✓"; position: absolute; left: 0; color: var(--accent); font-weight: 800; }
+  .tier .btn { text-align: center; }
+
+  /* Industries */
+  .chips { display: flex; flex-wrap: wrap; gap: 12px; }
+  .chip { padding: 10px 20px; border: 1px solid var(--line); border-radius: 99px; background: #fff; font-weight: 500; color: var(--ink-soft); }
+
+  /* FAQ */
+  .faq { max-width: 800px; margin: 0 auto; }
+  details { border-bottom: 1px solid var(--line); padding: 20px 0; }
+  summary { cursor: pointer; font-weight: 600; font-size: 1.08rem; list-style: none; display: flex; justify-content: space-between; gap: 20px; }
+  summary::-webkit-details-marker { display: none; }
+  summary::after { content: "+"; font-size: 1.5rem; line-height: 1; color: var(--brand); transition: transform .2s; }
+  details[open] summary::after { transform: rotate(45deg); }
+  details p { margin: 12px 0 0; color: var(--ink-soft); }
+
+  /* CTA */
+  .cta { background: var(--dark); color: #fff; }
+  .cta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: start; }
+  .cta p { color: #aab6cb; font-size: 1.08rem; }
+  .cta .eyebrow { color: #7aa7ff; }
+  form { background: #fff; color: var(--ink); border-radius: 16px; padding: 30px; display: grid; gap: 16px; }
+  label { font-weight: 600; font-size: .9rem; display: grid; gap: 6px; }
+  input, select, textarea {
+    font: inherit; padding: 12px 14px; border: 1.5px solid var(--line); border-radius: 9px; background: #fff; color: var(--ink); width: 100%;
+  }
+  input:focus, select:focus, textarea:focus { border-color: var(--brand); }
+  textarea { min-height: 100px; resize: vertical; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .fine { font-size: .8rem; color: var(--ink-soft); margin: 0; }
+
+  /* Footer */
+  footer { background: #070e1b; color: #8a98b2; padding: 56px 0 32px; font-size: .94rem; }
+  .foot-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr 1fr; gap: 40px; }
+  footer h4 { color: #fff; margin: 0 0 14px; font-size: .95rem; }
+  footer ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+  footer a:hover { color: #fff; }
+  footer .logo { color: #fff; margin-bottom: 12px; }
+  .copy { border-top: 1px solid #16233b; margin-top: 40px; padding-top: 24px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+
+  /* Responsive */
+  @media (max-width: 960px) {
+    section { padding: 68px 0; }
+    .hero-grid, .cta-grid { grid-template-columns: 1fr; gap: 40px; }
+    .g3 { grid-template-columns: 1fr 1fr; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .foot-grid { grid-template-columns: 1fr 1fr; }
+  }
+  @media (max-width: 820px) {
+    .menu-btn { display: flex; }
+    .nav-links {
+      position: absolute; top: 72px; left: 0; right: 0; background: #fff; flex-direction: column; align-items: stretch;
+      gap: 0; padding: 8px 24px 20px; border-bottom: 1px solid var(--line); display: none; box-shadow: var(--shadow);
+    }
+    .nav-links li a { display: block; padding: 14px 0; border-bottom: 1px solid var(--line); }
+    .nav-links li:last-child a { border: 0; margin-top: 14px; text-align: center; }
+    #menu-toggle:checked ~ .nav-links { display: flex; }
+    #menu-toggle:checked ~ .menu-btn span { background: transparent; }
+    #menu-toggle:checked ~ .menu-btn span::before { transform: translateY(7px) rotate(45deg); background: var(--ink); }
+    #menu-toggle:checked ~ .menu-btn span::after { transform: translateY(-7px) rotate(-45deg); background: var(--ink); }
+    #menu-toggle:focus-visible ~ .menu-btn { outline: 3px solid #7aa7ff; }
+  }
+  @media (max-width: 620px) {
+    .wrap { padding: 0 18px; }
+    section { padding: 56px 0; }
+    .hero { padding: 48px 0 64px; }
+    .g3, .g2, .compare, .steps, .row { grid-template-columns: 1fr; }
+    .foot-grid { grid-template-columns: 1fr; gap: 28px; }
+    .hero-cta .btn { width: 100%; text-align: center; }
+    form { padding: 22px; }
+    .console-body { font-size: .76rem; padding: 16px; overflow-x: auto; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; scroll-behavior: auto !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav">
+    <a href="#top" class="logo" aria-label="Fieldline home">
+      <span class="logo-mark" aria-hidden="true">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 L10 8 L14 14 L20 5"/></svg>
+      </span>
+      Fieldline
+    </a>
+    <input type="checkbox" id="menu-toggle" aria-label="Toggle navigation menu">
+    <label for="menu-toggle" class="menu-btn" aria-hidden="true"><span></span></label>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#approach">Approach</a></li>
+      <li><a href="#engagements">Engagements</a></li>
+      <li><a href="#faq">FAQ</a></li>
+      <li><a href="#contact" class="btn btn-primary">Talk to us</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="top">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Forward Deployed Engineering</span>
+        <h1>Engineers who show up where the problem is.</h1>
+        <p class="lead">Fieldline embeds senior engineers inside your organization to deploy software, integrate your systems, and fix operational problems on site, so your technology actually works in the real world.</p>
+        <div class="hero-cta">
+          <a href="#contact" class="btn btn-primary">Request a scoping call</a>
+          <a href="#approach" class="btn btn-ghost">See how we work</a>
+        </div>
+        <p class="hero-note"><span class="dot" aria-hidden="true"></span> On site, hands on, accountable to your outcomes.</p>
+      </div>
+
+      <div class="console" aria-hidden="true">
+        <div class="console-bar"><i></i><i></i><i></i><small>deployment-log — customer site</small></div>
+        <div class="console-body">
+          <div><span class="mut">$</span> fieldline status --site main</div>
+          <div><span class="ok">✔</span> engineer on site</div>
+          <div><span class="ok">✔</span> legacy ERP connector <span class="hl">live</span></div>
+          <div><span class="ok">✔</span> data sync across 3 systems</div>
+          <div><span class="ok">✔</span> operator training complete</div>
+          <div><span class="mut">…</span> monitoring &amp; handover <span class="hl">in progress</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="strip">
+    <div class="wrap">
+      <ul>
+        <li>Embedded with your team</li>
+        <li>Security-conscious by default</li>
+        <li>Works with your existing stack</li>
+        <li>Clear handover and documentation</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Services -->
+  <section id="services">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">What we do</span>
+        <h2>From signed contract to working in production.</h2>
+        <p>Software rarely fails because of the code alone. It fails at the edges: messy data, legacy systems, unclear workflows. That is where we work.</p>
+      </div>
+      <div class="grid g3">
+        <article class="card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><path d="m7 10 5 5 5-5"/><path d="M4 21h16"/></svg></div>
+          <h3>Software deployment</h3>
+          <p>We install, configure, and tune platforms in your environment, whether cloud, on-premise, or air-gapped, and make sure teams can use them from day one.</p>
+        </article>
+        <article class="card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7 0l3-3a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-3 3a5 5 0 0 0 7 7l1-1"/></svg></div>
+          <h3>Systems integration</h3>
+          <p>We connect ERPs, CRMs, databases, devices, and internal tools with reliable pipelines, APIs, and adapters built around how your operation really runs.</p>
+        </article>
+        <article class="card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L3 18l3 3 6.3-6.3a4 4 0 0 0 5.4-5.4l-2.4 2.4-2.6-.6-.6-2.6z"/></svg></div>
+          <h3>Operational problem solving</h3>
+          <p>We sit with operators, find the real bottleneck, and build the fix: scripts, workflows, dashboards, or product changes fed back to your engineering team.</p>
+        </article>
+        <article class="card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v6c0 1.7 3.6 3 8 3s8-1.3 8-3V5"/><path d="M4 11v6c0 1.7 3.6 3 8 3s8-1.3 8-3v-6"/></svg></div>
+          <h3>Data migration &amp; cleanup</h3>
+          <p>We move data out of legacy systems safely, validating and reconciling as we go, so you can trust the numbers on the other side.</p>
+        </article>
+        <article class="card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/><path d="M16 11a3 3 0 1 0 0-6"/><path d="M18 20c0-2.4-1-4.4-3-5.3"/></svg></div>
+          <h3>Training &amp; enablement</h3>
+          <p>We teach your people to run and extend what we build, with runbooks, walkthroughs, and office hours that leave capability behind.</p>
+        </article>
+        <article class="card">
+          <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg></div>
+          <h3>Monitoring &amp; support</h3>
+          <p>After go-live we stay close: watching health, resolving incidents quickly, and tightening the system as real usage reveals new needs.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Why FDE -->
+  <section class="alt" id="why">
+    <div class="wrap">
+      <div class="section-head center">
+        <span class="eyebrow">Why forward deployed</span>
+        <h2>Closer to the problem means faster to the fix.</h2>
+        <p>A ticket queue can't see your warehouse floor, your data quirks, or your approval chains. An embedded engineer can.</p>
+      </div>
+      <div class="compare">
+        <div class="card no">
+          <h3>Remote-only support</h3>
+          <ul>
+            <li>Context lost between tickets and handoffs</li>
+            <li>Workarounds instead of root causes</li>
+            <li>Integrations designed from documentation alone</li>
+            <li>Users adopt slowly, or not at all</li>
+          </ul>
+        </div>
+        <div class="card yes">
+          <h3>Fieldline embedded engineer</h3>
+          <ul>
+            <li>Direct access to operators and decision makers</li>
+            <li>Problems diagnosed in the real environment</li>
+            <li>Integrations built and tested against live systems</li>
+            <li>Adoption driven through hands-on enablement</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Approach -->
+  <section id="approach">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Our approach</span>
+        <h2>A simple, transparent engagement loop.</h2>
+        <p>Every deployment follows four phases, with clear checkpoints so you always know where things stand.</p>
+      </div>
+      <div class="steps">
+        <div class="step">
+          <h3>Discover</h3>
+          <p>We spend time on site mapping systems, workflows, stakeholders, and constraints, then agree on measurable goals.</p>
+        </div>
+        <div class="step">
+          <h3>Deploy</h3>
+          <p>We stand up the software in your environment and connect it to the systems it depends on.</p>
+        </div>
+        <div class="step">
+          <h3>Iterate</h3>
+          <p>We work side by side with users, shipping small fixes daily and resolving blockers as they appear.</p>
+        </div>
+        <div class="step">
+          <h3>Hand over</h3>
+          <p>We document, train, and transition ownership, or stay on for ongoing support. Your choice.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Engagements -->
+  <section class="alt" id="engagements">
+    <div class="wrap">
+      <div class="section-head center">
+        <span class="eyebrow">Engagement models</span>
+        <h2>Flexible ways to work together.</h2>
+        <p>Scope, duration, and team size are tailored to your situation. Tell us what you need and we will propose the right fit.</p>
+      </div>
+      <div class="grid g3">
+        <article class="card tier">
+          <h3>Rapid Deployment</h3>
+          <p>A short, focused engagement to get a specific system live.</p>
+          <ul>
+            <li>Defined scope and exit criteria</li>
+            <li>One embedded engineer</li>
+            <li>Integration and go-live support</li>
+            <li>Handover documentation</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost">Discuss scope</a>
+        </article>
+        <article class="card tier featured">
+          <span class="badge">Most common</span>
+          <h3>Embedded Team</h3>
+          <p>Ongoing on-site capacity for complex or multi-system programs.</p>
+          <ul>
+            <li>Dedicated engineer or pod</li>
+            <li>Regular stakeholder reviews</li>
+            <li>Continuous integration and improvement</li>
+            <li>Training for your internal team</li>
+          </ul>
+          <a href="#contact" class="btn btn-primary">Discuss scope</a>
+        </article>
+        <article class="card tier">
+          <h3>Ongoing Support</h3>
+          <p>Stay-close coverage after launch to keep operations healthy.</p>
+          <ul>
+            <li>Named engineer familiar with your stack</li>
+            <li>Incident response and monitoring</li>
+            <li>Periodic on-site visits</li>
+            <li>Roadmap and optimization input</li>
+          </ul>
+          <a href="#contact" class="btn btn-ghost">Discuss scope</a>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- Industries -->
+  <section id="industries">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="eyebrow">Where we work</span>
+        <h2>Built for complex, real-world operations.</h2>
+        <p>We are most useful where software meets physical processes, regulated data, or legacy infrastructure.</p>
+      </div>
+      <div class="chips">
+        <span class="chip">Manufacturing</span>
+        <span class="chip">Logistics &amp; supply chain</span>
+        <span class="chip">Healthcare</span>
+        <span class="chip">Energy &amp; utilities</span>
+        <span class="chip">Financial services</span>
+        <span class="chip">Retail operations</span>
+        <span class="chip">Public sector</span>
+        <span class="chip">Telecom</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section class="alt" id="faq">
+    <div class="wrap">
+      <div class="section-head center">
+        <span class="eyebrow">FAQ</span>
+        <h2>Questions teams ask before starting.</h2>
+      </div>
+      <div class="faq">
+        <details>
+          <summary>What is a Forward Deployed Engineer?</summary>
+          <p>A software engineer embedded with a customer to deploy software, integrate systems, and solve operational problems directly in the customer's environment, rather than from a distance.</p>
+        </details>
+        <details>
+          <summary>Do your engineers always work on site?</summary>
+          <p>Our default is on site, because that is where the context is. We can structure a hybrid arrangement when travel, security, or logistics call for it.</p>
+        </details>
+        <details>
+          <summary>Can you work with our legacy systems?</summary>
+          <p>Yes. Much of our work involves connecting modern software to older systems, databases, and equipment that cannot easily be replaced.</p>
+        </details>
+        <details>
+          <summary>How do you handle security and access?</summary>
+          <p>We work within your policies: least-privilege access, your approved tooling, and your review processes. Specific requirements are agreed during scoping.</p>
+        </details>
+        <details>
+          <summary>What happens when the engagement ends?</summary>
+          <p>You receive documentation, runbooks, and trained staff. If you want continued coverage, we can move to an ongoing support arrangement.</p>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA / Contact -->
+  <section class="cta" id="contact">
+    <div class="wrap cta-grid">
+      <div>
+        <span class="eyebrow">Get started</span>
+        <h2>Tell us where the work is stuck.</h2>
+        <p>Share a few details about your deployment or integration challenge. We will follow up to schedule a scoping conversation and outline how an embedded engineer could help.</p>
+      </div>
+      <form action="#" method="post">
+        <div class="row">
+          <label>Name
+            <input type="text" name="name" autocomplete="name" required>
+          </label>
+          <label>Work email
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+        </div>
+        <label>Company
+          <input type="text" name="company" autocomplete="organization">
+        </label>
+        <label>What do you need help with?
+          <select name="need">
+            <option>Software deployment</option>
+            <option>Systems integration</option>
+            <option>Operational problem solving</option>
+            <option>Data migration</option>
+            <option>Not sure yet</option>
+          </select>
+        </label>
+        <label>Tell us more
+          <textarea name="message"></textarea>
+        </label>
+        <button class="btn btn-primary" type="submit">Request a scoping call</button>
+        <p class="fine">We will only use your details to respond to this request.</p>
+      </form>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <a href="#top" class="logo">
+          <span class="logo-mark" aria-hidden="true">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 18 L10 8 L14 14 L20 5"/></svg>
+          </span>
+          Fieldline
+        </a>
+        <p>Forward deployed engineering for teams that need software to work in the real world.</p>
+      </div>
+      <div>
+        <h4>Services</h4>
+        <ul>
+          <li><a href="#services">Deployment</a></li>
+          <li><a href="#services">Integration</a></li>
+          <li><a href="#services">Data migration</a></li>
+          <li><a href="#services">Support</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Company</h4>
+        <ul>
+          <li><a href="#approach">Approach</a></li>
+          <li><a href="#engagements">Engagements</a></li>
+          <li><a href="#industries">Industries</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#faq">FAQ</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="copy">
+      <span>© 2026 Fieldline. All rights reserved.</span>
+      <span>Privacy · Terms</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

@@ -4,6 +4,17 @@ Module 1 Assignment
 
 Assignment: AI-Assisted Landing Page Development for FDE Service
 
+## Result
+
+The landing page for the FDE service was built with two models and compared in **[observation.md](observation.md)**.
+
+| Model | Page |
+| --- | --- |
+| Claude Sonnet 5.5 | [20261006/claude/index.html](20261006/claude/index.html) |
+| Grok 4.7 | [20261006/grok/index.html](20261006/grok/index.html) |
+
+**Grok 4.7 produced the better page.** The prompt, code-quality notes, hallucinations, and the reason are in [observation.md](observation.md).
+
 Objective
 The goal of this assignment is to assess learners' ability to:
 
@@ -37,7 +48,7 @@ Other AI coding assistants
 Required Documentation
 Create:
 
-observation.md
+**[observation.md](observation.md)** — completed. This is the comparison of Claude Sonnet 5.5 and Grok 4.7.
 
 observation. md Format
 1. AI Models Used

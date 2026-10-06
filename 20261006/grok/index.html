@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fieldline — Forward deployed engineers</title>
+  <meta name="description" content="Fieldline embeds a forward deployed engineer with your team to deploy software, integrate systems, and solve operational problems on site.">
+  <meta name="theme-color" content="#14241f">
+  <style>
+    :root {
+      --paper: #f6f3ec;
+      --paper-2: #fffdf8;
+      --ink: #1c1915;
+      --ink-soft: #3a342c;
+      --muted: #5c564c;
+      --line: #e0d8cc;
+      --line-strong: #c9bfb0;
+      --rust: #8f3218;
+      --rust-hot: #f0b89a;
+      --pine: #14241f;
+      --pine-2: #1c332b;
+      --cream: #f4efe6;
+      --cream-dim: #d9d0c3;
+      --shadow: 0 18px 40px rgba(28, 25, 21, 0.07);
+      --header: 4.5rem;
+      --wrap: 72rem;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      color-scheme: light;
+      scroll-behavior: smooth;
+      scroll-padding-top: calc(var(--header) + 0.75rem);
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+      font-size: 1.0625rem;
+      line-height: 1.6;
+      text-rendering: optimizeLegibility;
+    }
+
+    h1, h2, h3, p, ul, ol, figure {
+      margin: 0;
+    }
+
+    ul, ol {
+      padding: 0;
+      list-style: none;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    img {
+      max-width: 100%;
+    }
+
+    ::selection {
+      background: #f0d2c4;
+      color: #1a120e;
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--rust);
+      outline-offset: 3px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 1rem;
+      top: -4rem;
+      z-index: 80;
+      background: var(--ink);
+      color: var(--paper);
+      padding: 0.55rem 0.8rem;
+      text-decoration: none;
+    }
+
+    .skip:focus {
+      top: 0.75rem;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .wrap {
+      width: min(var(--wrap), calc(100% - 2.5rem));
+      margin-inline: auto;
+    }
+
+    .kicker {
+      margin-bottom: 0.85rem;
+      color: var(--rust);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+
+    h1, h2, .brand-name, .log-title {
+      font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+      font-weight: 600;
+      letter-spacing: -0.03em;
+    }
+
+    h1 {
+      font-size: clamp(2.6rem, 6.4vw, 4.8rem);
+      line-height: 0.98;
+      text-wrap: balance;
+    }
+
+    h2 {
+      font-size: clamp(2rem, 4vw, 3.15rem);
+      line-height: 1.05;
+      text-wrap: balance;
+      max-width: 18ch;
+    }
+
+    h3 {
+      font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
+      font-size: 1.2rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      line-height: 1.3;
+    }
+
+    .lede, .section-intro {
+      max-width: 38rem;
+      color: var(--ink-soft);
+      font-size: 1.125rem;
+    }
+
+    .section-intro {
+      margin-top: 1rem;
+    }
+
+    .site-header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .bar {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: min(var(--wrap), calc(100% - 2.5rem));
+      min-height: var(--header);
+      margin-inline: auto;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.7rem;
+      text-decoration: none;
+      color: var(--ink);
+    }
+
+    .mark {
+      width: 1.35rem;
+      height: 1.35rem;
+      display: block;
+    }
+
+    .brand-name {
+      font-size: 1.35rem;
+      letter-spacing: -0.04em;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .nav a {
+      text-decoration: none;
+      color: var(--ink-soft);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+
+    .nav a:hover {
+      color: var(--ink);
+    }
+
+    .nav-toggle,
+    .nav-burger {
+      display: none;
+    }
+
+    .button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.85rem;
+      padding: 0.7rem 1.2rem;
+      border-radius: 999px;
+      background: var(--ink);
+      color: var(--paper);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .button:hover {
+      background: #000;
+    }
+
+    .button.secondary {
+      background: transparent;
+      color: var(--ink);
+      box-shadow: inset 0 0 0 1.5px var(--line-strong);
+    }
+
+    .button.secondary:hover {
+      background: rgba(28, 25, 21, 0.04);
+    }
+
+    .button.light {
+      max-width: 100%;
+      background: var(--cream);
+      color: var(--pine);
+      overflow-wrap: anywhere;
+      text-align: center;
+    }
+
+    .button.light:hover {
+      background: #fff;
+    }
+
+    .nav .button {
+      min-height: 2.4rem;
+      padding: 0.55rem 0.95rem;
+      color: var(--paper);
+      font-size: 0.9rem;
+    }
+
+    .hero {
+      padding: 4.5rem 0 4rem;
+      background:
+        radial-gradient(ellipse 42% 48% at 100% 0%, rgba(143, 50, 24, 0.09), transparent 62%),
+        var(--paper);
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.25fr) minmax(16rem, 0.75fr);
+      gap: 3.5rem;
+      align-items: end;
+    }
+
+    .lede {
+      margin-top: 1.4rem;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-top: 1.8rem;
+    }
+
+    .log {
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      box-shadow: var(--shadow);
+      padding: 1.15rem 1.2rem 0.35rem;
+    }
+
+    .log-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-bottom: 0.85rem;
+      color: var(--muted);
+      font-family: "SF Mono", ui-monospace, Menlo, Consolas, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .log li {
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      padding: 0.9rem 0;
+      border-top: 1px solid var(--line);
+      font-size: 1rem;
+    }
+
+    .log li::before {
+      content: "";
+      width: 0.72rem;
+      height: 0.72rem;
+      margin-top: 0.38rem;
+      border: 1.5px solid var(--rust);
+      border-radius: 50%;
+      flex: none;
+    }
+
+    .log li.done::before {
+      background: var(--rust);
+      box-shadow: inset 0 0 0 2px var(--paper-2);
+    }
+
+    .role {
+      padding: 0 0 4.5rem;
+    }
+
+    .role-band {
+      display: grid;
+      grid-template-columns: 14rem 1fr;
+      gap: 2rem;
+      align-items: baseline;
+      padding: 1.6rem 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .definition {
+      max-width: 46rem;
+      font-family: "Iowan Old Style", Palatino, "Palatino Linotype", Georgia, serif;
+      font-size: 1.35rem;
+      line-height: 1.45;
+      letter-spacing: -0.02em;
+    }
+
+    .work, .engagements, .questions {
+      padding: 5rem 0;
+    }
+
+    .work {
+      background: var(--paper-2);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .duties {
+      margin-top: 2.5rem;
+    }
+
+    .duties li {
+      display: grid;
+      grid-template-columns: 4.5rem 14rem 1fr;
+      gap: 1rem;
+      align-items: baseline;
+      padding: 1.7rem 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .duties li:last-child {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .num {
+      color: var(--rust);
+      font-family: "Iowan Old Style", Palatino, Georgia, serif;
+      font-size: 1.15rem;
+      letter-spacing: 0;
+    }
+
+    .duties p, .steps p, .cards p, .qa p, .provide p {
+      color: var(--ink-soft);
+    }
+
+    .method {
+      padding: 5rem 0;
+      background:
+        radial-gradient(ellipse 40% 60% at 0% 100%, rgba(240, 184, 154, 0.12), transparent 55%),
+        var(--pine);
+      color: var(--cream);
+    }
+
+    .method .kicker,
+    .contact .kicker {
+      color: var(--rust-hot);
+    }
+
+    .method .section-intro,
+    .method .steps p {
+      color: var(--cream-dim);
+    }
+
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-top: 2.75rem;
+    }
+
+    .steps li {
+      padding-top: 1rem;
+      border-top: 1px solid rgba(244, 239, 230, 0.28);
+    }
+
+    .steps .num {
+      display: block;
+      margin-bottom: 0.9rem;
+      color: var(--rust-hot);
+    }
+
+    .steps h3 {
+      margin-bottom: 0.45rem;
+    }
+
+    .engagements {
+      background: var(--paper);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 2.5rem;
+    }
+
+    .cards article {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      min-height: 100%;
+      padding: 1.4rem 1.3rem 1.5rem;
+      background: var(--paper-2);
+      border: 1px solid var(--line);
+      border-radius: 16px;
+    }
+
+    .cards .num {
+      font-size: 1.4rem;
+    }
+
+    .provide {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2.5rem;
+      padding-top: 2rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .provide ul {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .provide li {
+      padding-left: 1rem;
+      border-left: 2px solid var(--rust);
+      color: var(--ink-soft);
+    }
+
+    .questions {
+      padding-top: 4.5rem;
+    }
+
+    .qa {
+      margin-top: 1.5rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .qa details {
+      border-bottom: 1px solid var(--line);
+    }
+
+    .qa summary {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 1.5rem;
+      padding: 1.15rem 0;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      list-style: none;
+    }
+
+    .qa summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .qa summary::after {
+      content: "+";
+      flex: none;
+      color: var(--rust);
+      font-family: "Iowan Old Style", Palatino, Georgia, serif;
+      font-size: 1.4rem;
+      font-weight: 500;
+      line-height: 1;
+    }
+
+    .qa details[open] summary::after {
+      content: "–";
+    }
+
+    .qa summary:hover {
+      color: var(--rust);
+    }
+
+    .qa p {
+      max-width: 42rem;
+      padding: 0 2rem 1.2rem 0;
+    }
+
+    .contact {
+      padding: 5rem 0;
+      background: var(--pine);
+      color: var(--cream);
+    }
+
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 3rem;
+      align-items: start;
+    }
+
+    .contact .section-intro {
+      color: var(--cream-dim);
+    }
+
+    .brief {
+      padding: 1.4rem 1.35rem 1.5rem;
+      background: var(--pine-2);
+      border: 1px solid rgba(244, 239, 230, 0.16);
+      border-radius: 16px;
+    }
+
+    .brief h3 {
+      margin-bottom: 0.8rem;
+    }
+
+    .brief ul {
+      display: grid;
+      gap: 0.45rem;
+      margin-bottom: 1.3rem;
+      color: var(--cream-dim);
+    }
+
+    .brief li::before {
+      content: "– ";
+      color: var(--rust-hot);
+    }
+
+    .site-footer {
+      padding: 1.3rem 0 1.6rem;
+      background: var(--pine);
+      color: var(--cream-dim);
+      border-top: 1px solid rgba(244, 239, 230, 0.14);
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+      font-size: 0.92rem;
+    }
+
+    .footer-row a {
+      color: var(--cream);
+      text-decoration: none;
+      overflow-wrap: anywhere;
+    }
+
+    .footer-brand {
+      color: var(--cream);
+      font-family: "Iowan Old Style", Palatino, Georgia, serif;
+      letter-spacing: -0.03em;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .role-band,
+      .contact-grid,
+      .provide,
+      .cards,
+      .steps {
+        grid-template-columns: 1fr;
+      }
+
+      .duties li {
+        grid-template-columns: 3rem 1fr;
+      }
+
+      .duties h3 {
+        grid-column: 2;
+      }
+
+      .duties p {
+        grid-column: 2;
+      }
+
+      .hero {
+        padding-top: 3rem;
+      }
+
+      h2 {
+        max-width: 18ch;
+      }
+    }
+
+    @media (max-width: 900px) {
+      .nav-burger,
+      .nav-toggle {
+        display: block;
+      }
+
+      .nav-toggle {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 2.75rem;
+        height: 2.75rem;
+        margin: 0;
+        transform: translateY(-50%);
+        opacity: 0;
+        cursor: pointer;
+        z-index: 2;
+      }
+
+      .nav-burger {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        width: 2.75rem;
+        height: 2.75rem;
+        transform: translateY(-50%);
+        border: 1px solid var(--line-strong);
+        border-radius: 999px;
+        background: var(--paper-2);
+      }
+
+      .bars,
+      .bars::before,
+      .bars::after {
+        position: absolute;
+        left: 0.72rem;
+        width: 1.15rem;
+        height: 1.5px;
+        background: var(--ink);
+      }
+
+      .bars {
+        top: 50%;
+      }
+
+      .bars::before,
+      .bars::after {
+        content: "";
+      }
+
+      .bars::before {
+        top: -6px;
+      }
+
+      .bars::after {
+        top: 6px;
+      }
+
+      .nav-toggle:checked + .nav-burger .bars {
+        background: transparent;
+      }
+
+      .nav-toggle:checked + .nav-burger .bars::before {
+        top: 0;
+        transform: rotate(45deg);
+      }
+
+      .nav-toggle:checked + .nav-burger .bars::after {
+        top: 0;
+        transform: rotate(-45deg);
+      }
+
+      .nav-toggle:focus-visible {
+        outline: none;
+      }
+
+      .nav-toggle:focus-visible + .nav-burger {
+        outline: 2px solid var(--rust);
+        outline-offset: 3px;
+      }
+
+      .nav {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0.35rem 0 1rem;
+        background: var(--paper);
+        border-bottom: 1px solid var(--line);
+        box-shadow: 0 16px 30px rgba(28, 25, 21, 0.06);
+      }
+
+      .nav-toggle:checked ~ .nav {
+        display: flex;
+      }
+
+      .nav a:not(.button) {
+        padding: 0.9rem 0;
+        border-top: 1px solid var(--line);
+      }
+
+      .nav .button {
+        align-self: flex-start;
+        margin-top: 0.85rem;
+        color: var(--paper);
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      html {
+        scroll-behavior: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="bar">
+      <a class="brand" href="#top">
+        <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+          <rect x="3" y="3" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"/>
+          <rect x="13" y="13" width="16" height="16" fill="#8f3218"/>
+        </svg>
+        <span class="brand-name">Fieldline</span>
+      </a>
+      <input class="nav-toggle" id="nav-toggle" type="checkbox">
+      <label class="nav-burger" for="nav-toggle" aria-controls="nav">
+        <span class="sr-only">Menu</span>
+        <span class="bars" aria-hidden="true"></span>
+      </label>
+      <nav class="nav" id="nav" aria-label="Primary">
+        <a href="#work">The work</a>
+        <a href="#method">Method</a>
+        <a href="#engagements">Engagements</a>
+        <a href="#questions">Questions</a>
+        <a class="button" href="#contact">Start a brief</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero" id="top">
+      <div class="wrap hero-grid">
+        <div>
+          <p class="kicker">Forward deployed engineering</p>
+          <h1>An engineer on site until the system runs.</h1>
+          <p class="lede">Fieldline embeds a forward deployed engineer with your team. They deploy the software into your environment, integrate the systems around it, and solve the operational problems that appear on site.</p>
+          <div class="hero-actions">
+            <a class="button" href="#contact">Start a brief</a>
+            <a class="button secondary" href="#work">See the work</a>
+          </div>
+        </div>
+        <aside class="log" aria-label="What an embed covers">
+          <div class="log-top">
+            <span>Site log</span>
+            <span>On site</span>
+          </div>
+          <ul>
+            <li class="done">Embed with the team that does the work</li>
+            <li class="done">Deploy into the live environment</li>
+            <li>Integrate the surrounding systems</li>
+            <li>Clear the operational problems</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+
+    <section class="role" aria-labelledby="role-title">
+      <div class="wrap">
+        <div class="role-band">
+          <p class="kicker" id="role-title">The role</p>
+          <p class="definition">A forward deployed engineer is an engineer embedded with your team to deploy software, integrate systems, and solve operational problems on site.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="work" id="work" aria-labelledby="work-title">
+      <div class="wrap">
+        <p class="kicker">01 — The work</p>
+        <h2 id="work-title">Deploy. Integrate. Solve it where it runs.</h2>
+        <p class="section-intro">The engineer works in your environment, with the people who have to use what gets deployed. The stay lasts through the problems the site reveals.</p>
+        <ol class="duties">
+          <li>
+            <span class="num">01</span>
+            <h3>Deploy</h3>
+            <p>Stand the software up in the environment where it has to run: access, configuration, and a first use that follows the real workflow.</p>
+          </li>
+          <li>
+            <span class="num">02</span>
+            <h3>Integrate</h3>
+            <p>Connect it to the systems the operation already depends on, including identity, records, events, and the tools beside it.</p>
+          </li>
+          <li>
+            <span class="num">03</span>
+            <h3>Solve</h3>
+            <p>Work the failures that show up on site. A field that does not match, a step the workflow will not skip, a permission that stops the work.</p>
+          </li>
+          <li>
+            <span class="num">04</span>
+            <h3>Hand back</h3>
+            <p>Leave the people who own the operation able to run it. The system is live, the runbook is with them, and the remaining work is named.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="method" id="method" aria-labelledby="method-title">
+      <div class="wrap">
+        <p class="kicker">02 — Method</p>
+        <h2 id="method-title">From a named site to a running system.</h2>
+        <p class="section-intro">Each engagement has one site, one outcome, and an engineer present for the work between those two points.</p>
+        <ol class="steps">
+          <li>
+            <span class="num">01</span>
+            <h3>Brief</h3>
+            <p>Name the site, the outcome, and the systems on the path.</p>
+          </li>
+          <li>
+            <span class="num">02</span>
+            <h3>Embed</h3>
+            <p>The engineer joins your team on site and works with the people who own the workflow.</p>
+          </li>
+          <li>
+            <span class="num">03</span>
+            <h3>Land</h3>
+            <p>Deploy, integrate, and solve what the live operation reveals.</p>
+          </li>
+          <li>
+            <span class="num">04</span>
+            <h3>Hand back</h3>
+            <p>Your team runs the system, with the notes and the access model to keep it running.</p>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="engagements" id="engagements" aria-labelledby="engage-title">
+      <div class="wrap">
+        <p class="kicker">03 — Engagements</p>
+        <h2 id="engage-title">The shape follows the site.</h2>
+        <p class="section-intro">Tell us what has to be true when the engineer leaves. The length of the stay follows that outcome.</p>
+        <div class="cards">
+          <article>
+            <span class="num">01</span>
+            <h3>Site embed</h3>
+            <p>One site and one operational outcome, for as long as that outcome takes to run without the engineer in the loop.</p>
+          </article>
+          <article>
+            <span class="num">02</span>
+            <h3>Rollout</h3>
+            <p>A first site sets the pattern. Later sites follow it, with an engineer present where that pattern meets a new site.</p>
+          </article>
+          <article>
+            <span class="num">03</span>
+            <h3>Resident</h3>
+            <p>An engineer remains with your team while the deployment continues and the operation keeps changing.</p>
+          </article>
+        </div>
+        <div class="provide">
+          <div>
+            <h3>What we need from you</h3>
+            <p>The embed depends on access and on the people who can say yes at the site.</p>
+          </div>
+          <ul>
+            <li>A named outcome for the site</li>
+            <li>Access to the environment</li>
+            <li>A counterpart who can make decisions there</li>
+            <li>Time with the people who do the work</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="questions" id="questions" aria-labelledby="faq-title">
+      <div class="wrap">
+        <p class="kicker">04 — Questions</p>
+        <h2 id="faq-title">Before the brief.</h2>
+        <div class="qa">
+          <details>
+            <summary>What is a forward deployed engineer?</summary>
+            <p>An engineer embedded with your team to deploy software, integrate systems, and solve operational problems on site.</p>
+          </details>
+          <details>
+            <summary>Where does the work happen?</summary>
+            <p>On site, in the environment the operation actually uses, with the people who use it.</p>
+          </details>
+          <details>
+            <summary>Does the engineer change the software?</summary>
+            <p>When the gap is in configuration or integration, they close it there. When the gap is in the software itself, they change the software so the site can run.</p>
+          </details>
+          <details>
+            <summary>What do we need to provide?</summary>
+            <p>A named outcome, access to the environment, someone who can make decisions at the site, and time with the people who do the work.</p>
+          </details>
+          <details>
+            <summary>How does an engagement end?</summary>
+            <p>When the agreed outcome is running on site, your team can operate it, and any remaining work is written down.</p>
+          </details>
+          <details>
+            <summary>How do we begin?</summary>
+            <p>Send a short brief. Include the site, the outcome, the systems on the path, and when it needs to be live.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <section class="contact" id="contact" aria-labelledby="contact-title">
+      <div class="wrap contact-grid">
+        <div>
+          <p class="kicker">05 — Brief</p>
+          <h2 id="contact-title">Tell us the site.</h2>
+          <p class="section-intro">A brief is a description of the site and the outcome. We reply with whether an embed is the right shape, and what the first stay would cover.</p>
+        </div>
+        <div class="brief">
+          <h3>Include in the note</h3>
+          <ul>
+            <li>The site</li>
+            <li>What should be true when the engineer leaves</li>
+            <li>The systems on the path</li>
+            <li>When it needs to be live</li>
+          </ul>
+          <a class="button light" href="mailto:hello@fieldline.example">hello@fieldline.example</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap footer-row">
+      <p><span class="footer-brand">Fieldline</span> — forward deployed engineers</p>
+      <p><a href="mailto:hello@fieldline.example">hello@fieldline.example</a></p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var toggle = document.getElementById("nav-toggle");
+      var nav = document.getElementById("nav");
+      var burger = document.querySelector(".nav-burger");
+      if (!toggle || !nav || !burger) return;
+
+      function sync() {
+        burger.setAttribute("aria-expanded", toggle.checked ? "true" : "false");
+      }
+
+      toggle.addEventListener("change", sync);
+      nav.addEventListener("click", function (event) {
+        if (event.target.closest("a")) {
+          toggle.checked = false;
+          sync();
+        }
+      });
+      document.addEventListener("keydown", function (event) {
+        if (event.key === "Escape" && toggle.checked) {
+          toggle.checked = false;
+          sync();
+          toggle.focus();
+        }
+      });
+      sync();
+    })();
+  </script>
+</body>
+</html>
